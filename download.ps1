@@ -171,9 +171,6 @@ function Show-MainMenu {
     Write-Host "4. 查看支持的网站"
     Write-Host "5. 退出"
     
-    Write-Host "`n⚠️ 隐私声明" -ForegroundColor Yellow
-    Write-Host "此应用程序收集匿名使用数据以改进服务质量。继续使用即表示您同意此隐私政策。" -ForegroundColor Yellow
-    
     $choice = Read-Host "`n👉 请选择选项 (1-5)"
     
     switch ($choice) {
