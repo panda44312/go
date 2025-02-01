@@ -383,13 +383,13 @@ function Download-File($url, $outputPath) {
 
 # 检查 yt-dlp.exe
 if (-not (Test-Path $ytdlpExePath)) {
-    Write-Host "未找到 yt-dlp.exe，正在下载..."
+    Write-Host "`n未找到 yt-dlp.exe，正在下载..."
     Download-File "https://github.com/panda44312/yt-dlp/raw/main/yt-dlp.exe" $ytdlpExePath
 }
 
 # 检查 ffmpeg.exe
 if (-not (Test-Path $ffmpegExePath)) {
-    Write-Host "未找到 ffmpeg.exe，正在下载..."
+    Write-Host "`n未找到 ffmpeg.exe，正在下载..."
     Download-File "https://github.com/panda44312/yt-dlp/raw/main/ffmpeg.exe" $ffmpegExePath
 }
 
