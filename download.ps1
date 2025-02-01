@@ -55,138 +55,11 @@ function Start-Download {
     }
 }
 
-# 新增：下载频道内容
-function Download-Channel {
-    Write-Host "`n📥 请输入频道URL：" -ForegroundColor Cyan
-    $channelUrl = Read-Host "🔗 频道URL"
-    
-    Write-Host "`n📁 请输入下载文件的存储路径（留空则使用当前目录）：" -ForegroundColor Cyan
-    $outputDir = Read-Host "📂 输出目录"
-    if ([string]::IsNullOrWhiteSpace($outputDir)) {
-        $outputDir = "."
-    }
-    
-    Write-Host "`n📅 请选择下载范围：" -ForegroundColor Cyan
-    Write-Host "1. 所有视频"
-    Write-Host "2. 最新的N个视频"
-    Write-Host "3. 指定日期之后的视频"
-    $rangeChoice = Read-Host "👉 请选择 (1-3)"
-    
-    $dateFilter = ""
-    switch ($rangeChoice) {
-        "2" {
-            $count = Read-Host "请输入要下载的视频数量"
-            $dateFilter = "--max-downloads $count"
-        }
-        "3" {
-            $date = Read-Host "请输入起始日期 (格式: YYYYMMDD)"
-            $dateFilter = "--dateafter $date"
-        }
-    }
-    
-    $format = Show-FormatMenu
-    
-    try {
-        Write-Host "`n⏳ 正在下载频道内容..." -ForegroundColor Yellow
-        Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
-            "-f", $format,
-            "--ffmpeg-location", $ffmpegExePath,
-            "-o", "`"$outputDir\%(uploader)s\%(title)s.%(ext)s`"",
-            $dateFilter,
-            "--yes-playlist",
-            $channelUrl
-        )
-    } catch {
-        Handle-Error "频道下载失败: $_"
-    }
-    
-    Write-Host "`n✅ 频道内容下载完成！按任意键返回主菜单..." -ForegroundColor Green
-    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
-    Show-MainMenu
-}
-
-# 新增：格式转换工具
-function Convert-MediaFormat {
-    Write-Host "`n🛠️ 格式转换工具" -ForegroundColor Cyan
-    Write-Host "1. 视频转换"
-    Write-Host "2. 音频转换"
-    $choice = Read-Host "👉 请选择 (1-2)"
-    
-    Write-Host "`n📁 请输入源文件路径："
-    $inputFile = Read-Host "📂 输入文件"
-    
-    Write-Host "`n📁 请输入输出路径（留空则使用当前目录）："
-    $outputDir = Read-Host "📂 输出目录"
-    if ([string]::IsNullOrWhiteSpace($outputDir)) {
-        $outputDir = "."
-    }
-    
-    switch ($choice) {
-        "1" {
-            Write-Host "`n选择输出格式："
-            Write-Host "1. MP4"
-            Write-Host "2. MKV"
-            Write-Host "3. AVI"
-            Write-Host "4. MOV"
-            $format = Read-Host "👉 请选择 (1-4)"
-            
-            $outputFormat = switch ($format) {
-                "1" { "mp4" }
-                "2" { "mkv" }
-                "3" { "avi" }
-                "4" { "mov" }
-                default { "mp4" }
-            }
-        }
-        "2" {
-            Write-Host "`n选择输出格式："
-            Write-Host "1. MP3"
-            Write-Host "2. WAV"
-            Write-Host "3. AAC"
-            Write-Host "4. FLAC"
-            $format = Read-Host "👉 请选择 (1-4)"
-            
-            $outputFormat = switch ($format) {
-                "1" { "mp3" }
-                "2" { "wav" }
-                "3" { "aac" }
-                "4" { "flac" }
-                default { "mp3" }
-            }
-        }
-    }
-    
-    $outputFile = Join-Path $outputDir "converted.$outputFormat"
-    
-    try {
-        Write-Host "`n⏳ 正在转换..." -ForegroundColor Yellow
-        if ($choice -eq "2") {
-            Start-Process -NoNewWindow -Wait -FilePath $ffmpegExePath -ArgumentList @(
-                "-i", "`"$inputFile`"",
-                "-vn",
-                "`"$outputFile`""
-            )
-        } else {
-            Start-Process -NoNewWindow -Wait -FilePath $ffmpegExePath -ArgumentList @(
-                "-i", "`"$inputFile`"",
-                "`"$outputFile`""
-            )
-        }
-        Write-Host "`n✅ 转换完成！输出文件：$outputFile" -ForegroundColor Green
-    } catch {
-        Handle-Error "转换失败: $_"
-    }
-    
-    Write-Host "`n按任意键返回主菜单..."
-    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
-    Show-MainMenu
-}
-
-# 更新主菜单
+# 主菜单
 function Show-MainMenu {
+
     Clear-Host
     Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
-    
 
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
@@ -287,41 +160,157 @@ function Show-MainMenu {
         "竹影随风轻摇曳，月光如水梦悠悠。"
     )
 
+    # 随机选择并输出诗词
     $randomPoem = $poetry | Get-Random
     Write-Host $randomPoem
-    
+
     Write-Host "`n🏠 主菜单" -ForegroundColor Cyan
     Write-Host "1. 下载单个视频"
     Write-Host "2. 下载多个视频"
     Write-Host "3. 下载播放列表"
-    Write-Host "4. 下载频道内容"
-    Write-Host "5. 格式转换工具"
-    Write-Host "6. 查看支持的网站"
-    Write-Host "7. 退出"
+    Write-Host "4. 查看支持的网站"
+    Write-Host "5. 退出"
     
-    $choice = Read-Host "`n👉 请选择选项 (1-7)"
+    $choice = Read-Host "`n👉 请选择选项 (1-5)"
     
     switch ($choice) {
         "1" { Download-Single }
         "2" { Download-Multiple }
         "3" { Download-Playlist }
-        "4" { Download-Channel }
-        "5" { Convert-MediaFormat }
-        "6" { Show-SupportedSites }
-        "7" { exit }
+        "4" { Show-SupportedSites }
+        "5" { exit }
         default { Show-MainMenu }
     }
 }
 
-# 主程序保持不变...
+# 格式选择菜单
+function Show-FormatMenu {
+
+    Write-Host "`n🎬 请选择下载格式：" -ForegroundColor Cyan
+    Write-Host "1. 8K (4320p) MP4"
+    Write-Host "2. 4K (2160p) MP4"
+    Write-Host "3. 2K (1440p) MP4"
+    Write-Host "4. 1080p MP4"
+    Write-Host "5. 720p MP4"
+    Write-Host "6. 480p MP4"
+    Write-Host "7. 360p MP4"
+    Write-Host "8. 仅音频 (最佳质量 MP3)"
+    Write-Host "9. 仅音频 (128kbps MP3)"
+    
+    $choice = Read-Host "👉 请选择选项 (1-9)"
+    
+    switch ($choice) {
+        "1" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }
+        "2" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }
+        "3" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }
+        "4" { return "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" }
+        "5" { return "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" }
+        "6" { return "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]" }
+        "7" { return "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]" }
+        "8" { return "bestaudio" }
+        "9" { return "worstaudio" }
+        default { return Show-FormatMenu }
+    }
+}
+
+# 单个视频下载
+function Download-Single {
+    Write-Host "`n📥 请输入视频链接：" -ForegroundColor Cyan
+    $url = Read-Host "🔗 URL"
+    
+    Write-Host "`n📁 请输入下载文件的存储路径（留空则使用当前目录）：" -ForegroundColor Cyan
+    $outputDir = Read-Host "📂 输出目录"
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+    
+    $format = Show-FormatMenu
+    Start-Download @($url) $outputDir $format
+    
+    Write-Host "`n✅ 下载完成！按任意键返回主菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+
+    Show-MainMenu
+}
+
+# 多个视频下载
+function Download-Multiple {
+    $urls = @()
+    Write-Host "`n📥 请输入视频链接（每行一个，输入空行完成）：" -ForegroundColor Cyan
+    while ($true) {
+        $url = Read-Host "🔗 URL"
+        if ([string]::IsNullOrWhiteSpace($url)) { break }
+        $urls += $url
+    }
+    
+    Write-Host "`n📁 请输入下载文件的存储路径（留空则使用当前目录）：" -ForegroundColor Cyan
+    $outputDir = Read-Host "📂 输出目录"
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+    
+    $format = Show-FormatMenu
+    Start-Download $urls $outputDir $format
+    
+    Write-Host "`n✅ 所有下载完成！按任意键返回主菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+
+    Show-MainMenu
+}
+
+# 播放列表下载
+function Download-Playlist {
+    Write-Host "`n📥 请输入播放列表链接：" -ForegroundColor Cyan
+    $url = Read-Host "🔗 URL"
+    
+    Write-Host "`n📁 请输入下载文件的存储路径（留空则使用当前目录）：" -ForegroundColor Cyan
+    $outputDir = Read-Host "📂 输出目录"
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+    
+    $format = Show-FormatMenu
+    
+    try {
+        Write-Host "`n⏳ 正在下载播放列表..." -ForegroundColor Yellow
+        Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+            "-f", $format,
+            "--ffmpeg-location", $ffmpegExePath,
+            "-o", "`"$outputDir\%(playlist_title)s\%(title)s.%(ext)s`"",
+            "--yes-playlist",
+            $url
+        )
+    } catch {
+        Handle-Error "播放列表下载失败: $_"
+    }
+    
+    Write-Host "`n✅ 播放列表下载完成！按任意键返回主菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+
+    Show-MainMenu
+}
+
+# 下载文件的函数
+function Download-File($url, $outputPath) {
+    try {
+        Write-Host "正在下载 $url ..."
+        (New-Object System.Net.WebClient).DownloadFile($url, $outputPath)
+        Write-Host "$outputPath 下载完成！"
+    } catch {
+        Write-Host "下载 $url 失败: $_"
+        exit 1
+    }
+}
+
 Clear-Host
 
-# 检查依赖文件
+# 检查 yt-dlp.exe
 if (-not (Test-Path $ytdlpExePath)) {
     Write-Host "`n未找到 yt-dlp.exe，正在下载..."
     Download-File "https://github.com/panda44312/yt-dlp/raw/main/yt-dlp.exe" $ytdlpExePath
 }
 
+# 检查 ffmpeg.exe
 if (-not (Test-Path $ffmpegExePath)) {
     Write-Host "`n未找到 ffmpeg.exe，正在下载..."
     Download-File "https://github.com/panda44312/yt-dlp/raw/main/ffmpeg.exe" $ffmpegExePath
