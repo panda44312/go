@@ -5,7 +5,6 @@ $host.UI.RawUI.WindowTitle = "🎬 YouTube 视频下载器 - yt-dlp 🚀"
 # 初始化变量
 $ffmpegExePath = ".\ffmpeg.exe"
 $ytdlpExePath = ".\yt-dlp.exe"
-$WorkerURL = "https://yt-dl-data.panda443212.workers.dev"
 
 # 错误处理函数
 function Handle-Error {
