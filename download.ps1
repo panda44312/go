@@ -381,6 +381,8 @@ function Download-File($url, $outputPath) {
     }
 }
 
+Clear-Host
+
 # 检查 yt-dlp.exe
 if (-not (Test-Path $ytdlpExePath)) {
     Write-Host "`n未找到 yt-dlp.exe，正在下载..."
