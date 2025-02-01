@@ -15,9 +15,6 @@ echo 载入中...
 :: 显示载入提示并下载最新的 PowerShell 脚本
 powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/go/main/download.ps1', '%~dp0download.ps1')"
 
-:: 下载最新的 yt-dlp.bat 文件
-powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/yt-dlp/main/yt-dlp.bat', '%~dp0yt-dlp.bat')"
-
 :: 运行 PowerShell 脚本
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1"
 
