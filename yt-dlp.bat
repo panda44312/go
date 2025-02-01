@@ -16,12 +16,7 @@ echo 载入中...
 powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/go/main/download.ps1', '%~dp0download.ps1')"
 
 :: 运行 PowerShell 脚本
-powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1"
-
-:: 删除旧的 download.ps1 文件（如果存在）
-if exist "%~dp0download.ps1" (
-    del "%~dp0download.ps1"
-)
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1" && del "%~dp0download.ps1"
 
 :: 执行完毕后退出
 exit
