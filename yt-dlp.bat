@@ -21,5 +21,10 @@ powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw
 :: 运行 PowerShell 脚本
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1"
 
+:: 删除旧的 download.ps1 文件（如果存在）
+if exist "%~dp0download.ps1" (
+    del "%~dp0download.ps1"
+)
+
 :: 执行完毕后退出
 exit
