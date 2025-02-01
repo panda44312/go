@@ -189,7 +189,6 @@ function Show-MainMenu {
 
 # 格式选择菜单
 function Show-FormatMenu {
-
     Write-Host "`n🎬 请选择下载格式：" -ForegroundColor Cyan
     Write-Host "1.  🚀 最高画质 + 无损音频"
     Write-Host "2.  🎥 8K (4320p) MP4"
@@ -210,30 +209,33 @@ function Show-FormatMenu {
     Write-Host "17. 🎵 仅音频 (128kbps MP3)"
     Write-Host "18. 🎵 仅音频 (64kbps MP3)"
     Write-Host "19. 🎶 仅音频 (AAC)"
-    
+
     $choice = Read-Host "👉 请输入你想要的格式"
-    
+
     switch ($choice) {
-        "1" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" } # 最高画质 + 无损音频 MP4 格式
-        "2" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }  # 8K (4320p) MP4
-        "3" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }  # 4K (2160p) MP4
-        "4" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }  # 2K (1440p) MP4
-        "5" { return "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" }  # 1080p MP4
-        "6" { return "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" }  # 720p MP4
-        "7" { return "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]" }  # 480p MP4
-        "8" { return "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]" }  # 360p MP4
-        "9" { return "bestvideo[height<=240][ext=mp4]+bestaudio[ext=m4a]/best[height<=240][ext=mp4]" }  # 240p MP4
-        "10" { return "bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]" }  # 144p MP4
-        "11" { return "bestvideo[height<=4320][ext=webm]+bestaudio[ext=webm]/best[height<=4320][ext=webm]" }  # 8K (4320p) WebM
-        "12" { return "bestvideo[height<=2160][ext=webm]+bestaudio[ext=webm]/best[height<=2160][ext=webm]" }  # 4K (2160p) WebM
-        "13" { return "bestvideo[height<=1080][ext=webm]+bestaudio[ext=webm]/best[height<=1080][ext=webm]" }  # 1080p WebM
-        "14" { return "bestvideo[height<=720][ext=webm]+bestaudio[ext=webm]/best[height<=720][ext=webm]" }  # 720p WebM
-        "15" { return "bestaudio[ext=mp3]" }  # 仅音频 (最佳质量 MP3)
-        "16" { return "bestaudio[ext=mp3]/bestaudio[abr>=320]" }  # 仅音频 (320kbps MP3)
-        "17" { return "bestaudio[ext=mp3]/bestaudio[abr>=128]" }  # 仅音频 (128kbps MP3)
-        "18" { return "bestaudio[ext=mp3]/bestaudio[abr<=64]" }  # 仅音频 (64kbps MP3)
-        "19" { return "bestaudio[ext=aac]/bestaudio[abr>=128]" }  # 仅音频 (AAC)
-        default { return Show-FormatMenu }  # 如果没有匹配的选项，则重新显示菜单
+        "1" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" } 
+        "2" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }
+        "3" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }
+        "4" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }
+        "5" { return "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" }
+        "6" { return "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" }
+        "7" { return "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]" }
+        "8" { return "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]" }
+        "9" { return "bestvideo[height<=240][ext=mp4]+bestaudio[ext=m4a]/best[height<=240][ext=mp4]" }
+        "10" { return "bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]" }
+        "11" { return "bestvideo[height<=4320][ext=webm]+bestaudio[ext=webm]/best[height<=4320][ext=webm]" }
+        "12" { return "bestvideo[height<=2160][ext=webm]+bestaudio[ext=webm]/best[height<=2160][ext=webm]" }
+        "13" { return "bestvideo[height<=1080][ext=webm]+bestaudio[ext=webm]/best[height<=1080][ext=webm]" }
+        "14" { return "bestvideo[height<=720][ext=webm]+bestaudio[ext=webm]/best[height<=720][ext=webm]" }
+        "15" { return "bestaudio/best --audio-format mp3" }  # 仅音频 (最佳质量 MP3)
+        "16" { return "bestaudio[abr>=320]/bestaudio --audio-format mp3" }  # 仅音频 (320kbps MP3)
+        "17" { return "bestaudio[abr>=128]/bestaudio --audio-format mp3" }  # 仅音频 (128kbps MP3)
+        "18" { return "bestaudio[abr<=64]/bestaudio --audio-format mp3" }   # 仅音频 (64kbps MP3)
+        "19" { return "bestaudio --audio-format aac" }  # 仅音频 (AAC)
+        default { 
+            Write-Host "⚠️  请输入正确的编号！" -ForegroundColor Red
+            Show-FormatMenu 
+        }
     }
 }
 
