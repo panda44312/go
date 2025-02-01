@@ -10,17 +10,21 @@ if exist "%~dp0download.ps1" (
     del "%~dp0download.ps1"
 )
 
+:: 删除旧的 yt-dlp.bat 文件（如果存在）
+if exist "%~dp0yt-dlp.bat" (
+    del "%~dp0yt-dlp.bat"
+)
+
 :: 显示载入提示并下载最新的 PowerShell 脚本
 echo 载入中...
-powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/yt-dlp/main/download.ps1', '%~dp0download.ps1')"
+powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/go/main/download.ps1', '%~dp0download.ps1')"
+
+:: 下载最新的 yt-dlp.bat 文件
+echo 载入中...
+powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/yt-dlp/main/yt-dlp.bat', '%~dp0yt-dlp.bat')"
 
 :: 运行 PowerShell 脚本
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1"
-
-:: 删除旧的 download.ps1 文件（如果存在）
-if exist "%~dp0download.ps1" (
-    del "%~dp0download.ps1"
-)
 
 :: 执行完毕后退出
 exit
