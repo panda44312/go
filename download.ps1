@@ -238,7 +238,8 @@ function Show-MainMenu {
     $randomPoem = $poetry | Get-Random
     Write-Host $randomPoem
 
-    Write-Host "`n1. 下载单个视频"
+    Write-Host "`n🏠 主菜单：" -ForegroundColor Cyan
+    Write-Host "1. 下载单个视频"
     Write-Host "2. 下载多个视频"
     Write-Host "3. 下载播放列表"
     Write-Host "4. 查看支持的网站"
