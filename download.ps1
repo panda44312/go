@@ -214,7 +214,7 @@ function Show-FormatMenu {
     $choice = Read-Host "👉 请输入你想要的格式"
     
     switch ($choice) {
-        "1" { return "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" }  # 最高画质 + 无损音频 MP4 格式
+        "1" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" } # 最高画质 + 无损音频 MP4 格式
         "2" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }  # 8K (4320p) MP4
         "3" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }  # 4K (2160p) MP4
         "4" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }  # 2K (1440p) MP4
