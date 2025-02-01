@@ -61,8 +61,8 @@ function Show-MainMenu {
     Clear-Host
     Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
 
-    Write-Host "`n📑 最近更新 2025/5/1" -ForegroundColor Cyan
-    Write-Host "更新了下载频道功能`n更新了更多格式选单" -ForegroundColor Cyan
+    Write-Host "`n📑 最近更新 2025/5/1 - v2.0" -ForegroundColor Cyan
+    Write-Host "更新了下载频道功能`n更新了更多格式选单`n更新了 ffmpeg 工具箱" -ForegroundColor Cyan
 
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
@@ -171,7 +171,7 @@ function Show-MainMenu {
     Write-Host "1. 📽 下载单个视频"
     Write-Host "2. 📽 下载多个视频"
     Write-Host "3. 📑 下载播放列表"
-    Write-Host "4. ▶️ 下载频道内容"
+    Write-Host "4. 📚 下载频道内容"
     Write-Host "5. 🔧 ffmpeg 工具箱"
     Write-Host "6. ❌ 退出"
     
