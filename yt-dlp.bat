@@ -13,7 +13,7 @@ if exist "%~dp0download.ps1" (
 echo 载入中...
 
 :: 显示载入提示并下载最新的 PowerShell 脚本
-powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/go/main/download.ps1', '%~dp0download.ps1')"
+powershell -Command "(New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/panda44312/yt-dlp/main/download.ps1', '%~dp0download.ps1')"
 
 :: 运行 PowerShell 脚本
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0download.ps1" && del "%~dp0download.ps1"
