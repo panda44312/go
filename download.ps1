@@ -236,7 +236,7 @@ function Show-MainMenu {
 
     # 随机选择并输出诗词
     $randomPoem = $poetry | Get-Random
-    Write-Output $randomPoem
+    Write-Host $randomPoem
 
     Write-Host "1. 下载单个视频"
     Write-Host "2. 下载多个视频"
