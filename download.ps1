@@ -37,7 +37,6 @@ function Start-Download {
                     "--ffmpeg-location", $ffmpegExePath,
                     "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
                     "--extract-audio",
-                    "--audio-format", "mp3",
                     $url
                 )
             } else {
