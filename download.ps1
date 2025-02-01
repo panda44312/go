@@ -265,12 +265,28 @@ function Download-Playlist {
     Show-MainMenu
 }
 
-# 检查必要文件
-if (-not (Test-Path $ytdlpExePath)) {
-    Handle-Error "未找到 yt-dlp.exe，请确保文件存在于当前目录"
+# 下载文件的函数
+function Download-File($url, $outputPath) {
+    try {
+        Write-Host "正在下载 $url ..."
+        (New-Object System.Net.WebClient).DownloadFile($url, $outputPath)
+        Write-Host "$outputPath 下载完成！"
+    } catch {
+        Write-Host "下载 $url 失败: $_"
+        exit 1
+    }
 }
+
+# 检查 yt-dlp.exe
+if (-not (Test-Path $ytdlpExePath)) {
+    Write-Host "未找到 yt-dlp.exe，正在下载..."
+    Download-File "https://github.com/panda44312/yt-dlp/raw/main/yt-dlp.exe" $ytdlpExePath
+}
+
+# 检查 ffmpeg.exe
 if (-not (Test-Path $ffmpegExePath)) {
-    Handle-Error "未找到 ffmpeg.exe，请确保文件存在于当前目录"
+    Write-Host "未找到 ffmpeg.exe，正在下载..."
+    Download-File "https://github.com/panda44312/yt-dlp/raw/main/ffmpeg.exe" $ffmpegExePath
 }
 
 # 启动主菜单
