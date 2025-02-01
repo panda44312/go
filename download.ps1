@@ -133,7 +133,7 @@ function Start-Download {
 function Show-MainMenu {
 
     Clear-Host
-    Write-Host "🎬 增强版视频下载器 - 主菜单" -ForegroundColor Cyan
+    Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
     Write-Host "1. 下载单个视频"
     Write-Host "2. 下载多个视频"
     Write-Host "3. 下载播放列表"
