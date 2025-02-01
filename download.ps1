@@ -133,7 +133,7 @@ function Start-Download {
 function Show-MainMenu {
 
     Clear-Host
-    Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
+    Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀 - v1.0" -ForegroundColor Cyan
 
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
