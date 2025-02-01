@@ -61,6 +61,9 @@ function Show-MainMenu {
     Clear-Host
     Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
 
+    Write-Host "`n📑 最近更新 2025/5/1" -ForegroundColor Cyan
+    Write-Host "更新了下载频道功能`n更新了更多格式选单" -ForegroundColor Cyan
+
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
         "斑纹隐现生奇趣，心随清梦赴天心。",
@@ -162,23 +165,25 @@ function Show-MainMenu {
 
     # 随机选择并输出诗词
     $randomPoem = $poetry | Get-Random
-    Write-Host $randomPoem
+    Write-Host "`n$randomPoem"
 
     Write-Host "`n🏠 主菜单" -ForegroundColor Cyan
-    Write-Host "1. 下载单个视频"
-    Write-Host "2. 下载多个视频"
-    Write-Host "3. 下载播放列表"
-    Write-Host "4. 查看支持的网站"
-    Write-Host "5. 退出"
+    Write-Host "1. 📽 下载单个视频"
+    Write-Host "2. 📽 下载多个视频"
+    Write-Host "3. 📑 下载播放列表"
+    Write-Host "4. ▶️ 下载频道内容"
+    Write-Host "5. 🔧 ffmpeg 工具箱"
+    Write-Host "6. ❌ 退出"
     
-    $choice = Read-Host "`n👉 请选择选项 (1-5)"
+    $choice = Read-Host "👉 请选择选项 (1-6)"
     
     switch ($choice) {
         "1" { Download-Single }
         "2" { Download-Multiple }
         "3" { Download-Playlist }
-        "4" { Show-SupportedSites }
-        "5" { exit }
+        "4" { Download-Channel }
+        "5" { Show-ToolboxMenu }
+        "6" { exit }
         default { Show-MainMenu }
     }
 }
@@ -187,31 +192,174 @@ function Show-MainMenu {
 function Show-FormatMenu {
 
     Write-Host "`n🎬 请选择下载格式：" -ForegroundColor Cyan
-    Write-Host "1. 8K (4320p) MP4"
-    Write-Host "2. 4K (2160p) MP4"
-    Write-Host "3. 2K (1440p) MP4"
-    Write-Host "4. 1080p MP4"
-    Write-Host "5. 720p MP4"
-    Write-Host "6. 480p MP4"
-    Write-Host "7. 360p MP4"
-    Write-Host "8. 仅音频 (最佳质量 MP3)"
-    Write-Host "9. 仅音频 (128kbps MP3)"
+    Write-Host "1.  🚀 最高画质 + 无损音频"
+    Write-Host "2.  🎥 8K (4320p) MP4"
+    Write-Host "3.  🎥 4K (2160p) MP4"
+    Write-Host "4.  🎥 2K (1440p) MP4"
+    Write-Host "5.  🎥 1080p MP4"
+    Write-Host "6.  🎥 720p MP4"
+    Write-Host "7.  🎥 480p MP4"
+    Write-Host "8.  🎥 360p MP4"
+    Write-Host "9.  🎥 240p MP4"
+    Write-Host "10. 🎥 144p MP4"
+    Write-Host "11. 🎞️ 8K (4320p) WebM"
+    Write-Host "12. 🎞️ 4K (2160p) WebM"
+    Write-Host "13. 🎞️ 1080p WebM"
+    Write-Host "14. 🎞️ 720p WebM"
+    Write-Host "15. 🎵 仅音频 (最佳质量 MP3)"
+    Write-Host "16. 🎵 仅音频 (320kbps MP3)"
+    Write-Host "17. 🎵 仅音频 (128kbps MP3)"
+    Write-Host "18. 🎵 仅音频 (64kbps MP3)"
+    Write-Host "19. 🎶 仅音频 (AAC)"
     
-    $choice = Read-Host "👉 请选择选项 (1-9)"
+    $choice = Read-Host "👉 请输入你想要的格式"
     
     switch ($choice) {
-        "1" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }
-        "2" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }
-        "3" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }
-        "4" { return "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" }
-        "5" { return "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" }
-        "6" { return "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]" }
-        "7" { return "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]" }
-        "8" { return "bestaudio" }
-        "9" { return "worstaudio" }
-        default { return Show-FormatMenu }
+        "1" { return "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best" }  # 最高画质 + 无损音频 MP4 格式
+        "2" { return "bestvideo[height<=4320][ext=mp4]+bestaudio[ext=m4a]/best[height<=4320][ext=mp4]" }  # 8K (4320p) MP4
+        "3" { return "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160][ext=mp4]" }  # 4K (2160p) MP4
+        "4" { return "bestvideo[height<=1440][ext=mp4]+bestaudio[ext=m4a]/best[height<=1440][ext=mp4]" }  # 2K (1440p) MP4
+        "5" { return "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080][ext=mp4]" }  # 1080p MP4
+        "6" { return "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]" }  # 720p MP4
+        "7" { return "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480][ext=mp4]" }  # 480p MP4
+        "8" { return "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360][ext=mp4]" }  # 360p MP4
+        "9" { return "bestvideo[height<=240][ext=mp4]+bestaudio[ext=m4a]/best[height<=240][ext=mp4]" }  # 240p MP4
+        "10" { return "bestvideo[height<=144][ext=mp4]+bestaudio[ext=m4a]/best[height<=144][ext=mp4]" }  # 144p MP4
+        "11" { return "bestvideo[height<=4320][ext=webm]+bestaudio[ext=webm]/best[height<=4320][ext=webm]" }  # 8K (4320p) WebM
+        "12" { return "bestvideo[height<=2160][ext=webm]+bestaudio[ext=webm]/best[height<=2160][ext=webm]" }  # 4K (2160p) WebM
+        "13" { return "bestvideo[height<=1080][ext=webm]+bestaudio[ext=webm]/best[height<=1080][ext=webm]" }  # 1080p WebM
+        "14" { return "bestvideo[height<=720][ext=webm]+bestaudio[ext=webm]/best[height<=720][ext=webm]" }  # 720p WebM
+        "15" { return "bestaudio[ext=mp3]" }  # 仅音频 (最佳质量 MP3)
+        "16" { return "bestaudio[ext=mp3]/bestaudio[abr>=320]" }  # 仅音频 (320kbps MP3)
+        "17" { return "bestaudio[ext=mp3]/bestaudio[abr>=128]" }  # 仅音频 (128kbps MP3)
+        "18" { return "bestaudio[ext=mp3]/bestaudio[abr<=64]" }  # 仅音频 (64kbps MP3)
+        "19" { return "bestaudio[ext=aac]/bestaudio[abr>=128]" }  # 仅音频 (AAC)
+        default { return Show-FormatMenu }  # 如果没有匹配的选项，则重新显示菜单
     }
 }
+
+# 工具箱功能
+function Show-ToolboxMenu {
+    Write-Host "`n🔧 ffmpeg 工具箱" -ForegroundColor Cyan
+    Write-Host "1. 使用 ffmpeg 转换视频格式"
+    Write-Host "2. 使用 ffmpeg 裁剪视频"
+    Write-Host "3. 使用 ffmpeg 提取音频"
+    Write-Host "4. 返回主菜单"
+    
+    $choice = Read-Host "👉 请选择选项 (1-4)"
+    
+    switch ($choice) {
+        "1" { Convert-VideoFormat }
+        "2" { Trim-Video }
+        "3" { Extract-Audio }
+        "4" { Show-MainMenu }
+        default { Show-ToolboxMenu }
+    }
+}
+
+# 转换视频格式
+function Convert-VideoFormat {
+    Write-Host "`n📥 请输入视频文件路径：" -ForegroundColor Cyan
+    $inputFile = Read-Host "🔗 输入文件路径"
+    
+    Write-Host "`n🎬 请输入目标格式 (例如: mp4, avi, mkv)：" -ForegroundColor Cyan
+    $outputFormat = Read-Host "目标格式"
+    
+    Write-Host "`n📁 请输入输出文件的存储路径：" -ForegroundColor Cyan
+    $outputDir = Read-Host "输出路径"
+    
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+
+    $outputFile = "$outputDir\$( [System.IO.Path]::GetFileNameWithoutExtension($inputFile) ).$outputFormat"
+
+    try {
+        Write-Host "`n⏳ 正在转换视频格式..." -ForegroundColor Yellow
+        Start-Process -NoNewWindow -Wait -FilePath $ffmpegExePath -ArgumentList @(
+            "-i", $inputFile,
+            "$outputFile"
+        )
+    } catch {
+        Handle-Error "格式转换失败: $_"
+    }
+    
+    Write-Host "`n✅ 视频格式转换完成！按任意键返回工具箱菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    Show-ToolboxMenu
+}
+
+# 裁剪视频
+function Trim-Video {
+    Write-Host "`n📥 请输入视频文件路径：" -ForegroundColor Cyan
+    $inputFile = Read-Host "🔗 输入文件路径"
+    
+    Write-Host "`n🎬 请输入裁剪起始时间 (格式: HH:MM:SS)：" -ForegroundColor Cyan
+    $startTime = Read-Host "起始时间"
+    
+    Write-Host "`n🎬 请输入裁剪持续时间 (格式: HH:MM:SS)：" -ForegroundColor Cyan
+    $duration = Read-Host "持续时间"
+    
+    Write-Host "`n📁 请输入输出文件的存储路径：" -ForegroundColor Cyan
+    $outputDir = Read-Host "输出路径"
+    
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+
+    $outputFile = "$outputDir\$( [System.IO.Path]::GetFileNameWithoutExtension($inputFile) )_trimmed.mp4"
+
+    try {
+        Write-Host "`n⏳ 正在裁剪视频..." -ForegroundColor Yellow
+        Start-Process -NoNewWindow -Wait -FilePath $ffmpegExePath -ArgumentList @(
+            "-i", $inputFile,
+            "-ss", $startTime,
+            "-t", $duration,
+            "$outputFile"
+        )
+    } catch {
+        Handle-Error "视频裁剪失败: $_"
+    }
+    
+    Write-Host "`n✅ 视频裁剪完成！按任意键返回工具箱菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    Show-ToolboxMenu
+}
+
+# 提取音频
+function Extract-Audio {
+    Write-Host "`n📥 请输入视频文件路径：" -ForegroundColor Cyan
+    $inputFile = Read-Host "🔗 输入文件路径"
+    
+    Write-Host "`n🎧 请选择提取的音频格式 (例如: mp3, wav)：" -ForegroundColor Cyan
+    $audioFormat = Read-Host "音频格式"
+    
+    Write-Host "`n📁 请输入输出文件的存储路径：" -ForegroundColor Cyan
+    $outputDir = Read-Host "输出路径"
+    
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+
+    $outputFile = "$outputDir\$( [System.IO.Path]::GetFileNameWithoutExtension($inputFile) ).$audioFormat"
+
+    try {
+        Write-Host "`n⏳ 正在提取音频..." -ForegroundColor Yellow
+        Start-Process -NoNewWindow -Wait -FilePath $ffmpegExePath -ArgumentList @(
+            "-i", $inputFile,
+            "-vn",  # 不包含视频
+            "-acodec", "libmp3lame",
+            "$outputFile"
+        )
+    } catch {
+        Handle-Error "音频提取失败: $_"
+    }
+    
+    Write-Host "`n✅ 音频提取完成！按任意键返回工具箱菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    Show-ToolboxMenu
+}
+
 
 # 单个视频下载
 function Download-Single {
@@ -287,6 +435,64 @@ function Download-Playlist {
     Write-Host "`n✅ 播放列表下载完成！按任意键返回主菜单..." -ForegroundColor Green
     $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 
+    Show-MainMenu
+}
+
+# 频道下载
+function Download-Channel {
+    Write-Host "`n📥 请输入频道URL：" -ForegroundColor Cyan
+    $channelUrl = Read-Host "🔗 频道 URL"
+
+    Write-Host "`n📁 请输入下载文件的存储路径（留空则使用当前目录）：" -ForegroundColor Cyan
+    $outputDir = Read-Host "📂 输出目录"
+    if ([string]::IsNullOrWhiteSpace($outputDir)) {
+        $outputDir = "."
+    }
+
+    Write-Host "`n🎬 请选择下载模式：" -ForegroundColor Cyan
+    Write-Host "1. 下载前 N 个视频"
+    Write-Host "2. 下载指定日期后的视频"
+    Write-Host "3. 返回主菜单"
+    
+    $choice = Read-Host "👉 请选择选项 (1-3)"
+    
+    switch ($choice) {
+        "1" {
+            $numVideos = Read-Host "📥 请输入要下载的视频数量"
+            $filter = "--max-downloads $numVideos"
+        }
+        "2" {
+            $date = Read-Host "📅 请输入日期 (格式: YYYYMMDD)"
+            $filter = "--dateafter $date"
+        }
+        "3" {
+            Show-MainMenu
+            return
+        }
+        default {
+            Write-Host "❌ 无效选择，返回主菜单..." -ForegroundColor Red
+            Show-MainMenu
+            return
+        }
+    }
+
+    $format = Show-FormatMenu
+    
+    try {
+        Write-Host "`n⏳ 正在下载频道内容..." -ForegroundColor Yellow
+        Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+            "-f", $format,
+            "--ffmpeg-location", $ffmpegExePath,
+            "-o", "`"$outputDir\%(uploader)s\%(title)s.%(ext)s`"",
+            $filter,
+            $channelUrl
+        )
+    } catch {
+        Handle-Error "频道下载失败: $_"
+    }
+    
+    Write-Host "`n✅ 频道视频下载完成！按任意键返回主菜单..." -ForegroundColor Green
+    $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
     Show-MainMenu
 }
 
