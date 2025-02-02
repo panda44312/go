@@ -31,11 +31,13 @@ function Start-Download {
     foreach ($url in $Urls) {
         try {
             Write-Host "`n⏳ 正在下载: $url" -ForegroundColor Yellow
-            if ($Format -like "*audio*") {
+            if ($Format -match "^bestaudio") {
                 Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
                     "-f", $Format,
                     "--ffmpeg-location", $ffmpegExePath,
                     "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
+                    "--extract-audio",
+                    "--audio-format", "mp3",
                     $url
                 )
             } else {
@@ -58,8 +60,8 @@ function Show-MainMenu {
     Clear-Host
     Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
 
-    Write-Host "`n📑 最近更新 2025/5/1 - v2.0" -ForegroundColor Cyan
-    Write-Host "更新了下载频道功能`n更新了更多格式选单`n更新了 ffmpeg 工具箱" -ForegroundColor Cyan
+    Write-Host "`n📑 最近更新 2025/5/2 - v2.1" -ForegroundColor Cyan
+    Write-Host "修复了一些 bug" -ForegroundColor Cyan
 
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
@@ -206,7 +208,6 @@ function Show-FormatMenu {
     Write-Host "16. 🎵 仅音频 (320kbps MP3)"
     Write-Host "17. 🎵 仅音频 (128kbps MP3)"
     Write-Host "18. 🎵 仅音频 (64kbps MP3)"
-    Write-Host "19. 🎶 仅音频 (AAC)"
 
     $choice = Read-Host "👉 请输入你想要的格式"
 
@@ -225,11 +226,10 @@ function Show-FormatMenu {
         "12" { return "bestvideo[height<=2160][ext=webm]+bestaudio[ext=webm]/best[height<=2160][ext=webm]" }
         "13" { return "bestvideo[height<=1080][ext=webm]+bestaudio[ext=webm]/best[height<=1080][ext=webm]" }
         "14" { return "bestvideo[height<=720][ext=webm]+bestaudio[ext=webm]/best[height<=720][ext=webm]" }
-        "15" { return "bestaudio/best --audio-format mp3" }  # 仅音频 (最佳质量 MP3)
-        "16" { return "bestaudio[abr>=320]/bestaudio --audio-format mp3" }  # 仅音频 (320kbps MP3)
-        "17" { return "bestaudio[abr>=128]/bestaudio --audio-format mp3" }  # 仅音频 (128kbps MP3)
-        "18" { return "bestaudio[abr<=64]/bestaudio --audio-format mp3" }   # 仅音频 (64kbps MP3)
-        "19" { return "bestaudio --audio-format aac" }  # 仅音频 (AAC)
+        "15" { return "bestaudio/best" }  # 仅音频 (最佳质量 MP3)
+        "16" { return "bestaudio[abr>=320]/bestaudio" }  # 仅音频 (320kbps MP3)
+        "17" { return "bestaudio[abr>=128]/bestaudio" }  # 仅音频 (128kbps MP3)
+        "18" { return "bestaudio[abr<=64]/bestaudio" }   # 仅音频 (64kbps MP3)
         default { 
             Write-Host "⚠️  请输入正确的编号！" -ForegroundColor Red
             Show-FormatMenu 
@@ -359,7 +359,6 @@ function Extract-Audio {
     Show-ToolboxMenu
 }
 
-
 # 单个视频下载
 function Download-Single {
     Write-Host "`n📥 请输入视频链接：" -ForegroundColor Cyan
@@ -420,13 +419,28 @@ function Download-Playlist {
     
     try {
         Write-Host "`n⏳ 正在下载播放列表..." -ForegroundColor Yellow
-        Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
-            "-f", $format,
-            "--ffmpeg-location", $ffmpegExePath,
-            "-o", "`"$outputDir\%(playlist_title)s\%(title)s.%(ext)s`"",
-            "--yes-playlist",
-            $url
-        )
+
+        
+        if ($format -match "^bestaudio") {
+            Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+                "-f", $format,
+                "--ffmpeg-location", $ffmpegExePath,
+                "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
+                "--extract-audio",
+                "--audio-format", "mp3",
+                "--yes-playlist",
+                $url
+            )
+        } else {
+            Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+                "-f", $format,
+                "--ffmpeg-location", $ffmpegExePath,
+                "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
+                "--yes-playlist",
+                $url
+            )
+        }
+
     } catch {
         Handle-Error "播放列表下载失败: $_"
     }
@@ -479,13 +493,27 @@ function Download-Channel {
     
     try {
         Write-Host "`n⏳ 正在下载频道内容..." -ForegroundColor Yellow
-        Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
-            "-f", $format,
-            "--ffmpeg-location", $ffmpegExePath,
-            "-o", "`"$outputDir\%(uploader)s\%(title)s.%(ext)s`"",
-            $filter,
-            $channelUrl
-        )
+
+        if ($format -match "^bestaudio") {
+            Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+                "-f", $format,
+                "--ffmpeg-location", $ffmpegExePath,
+                "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
+                "--extract-audio",
+                "--audio-format", "mp3",
+                $filter,
+                $channelUrl
+            )
+        } else {
+            Start-Process -NoNewWindow -Wait -FilePath $ytdlpExePath -ArgumentList @(
+                "-f", $format,
+                "--ffmpeg-location", $ffmpegExePath,
+                "-o", "`"$OutputDir\%(title)s.%(ext)s`"",
+                $filter,
+                $channelUrl
+            )
+        }
+
     } catch {
         Handle-Error "频道下载失败: $_"
     }
