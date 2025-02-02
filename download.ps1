@@ -61,8 +61,8 @@ function Show-MainMenu {
     Write-Host "🎬 YouTube 视频下载器 - yt-dlp 🚀" -ForegroundColor Cyan
 
     Write-Host "`n📑 最近更新 2025/5/2 - v2.1" -ForegroundColor Cyan
-    Write-Host "修复了严重 bug" -ForegroundColor Cyan
-    Write-Host "修复了无法仅下载音频的 bug" -ForegroundColor Cyan
+    Write-Host "修复了严重 bug" -ForegroundColor Green
+    Write-Host "修复了无法仅下载音频的 bug" -ForegroundColor Green
 
     $poetry = @(
         "夜幕低垂染幽林，竹影摇风舞月轮。",
